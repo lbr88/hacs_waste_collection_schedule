@@ -12,7 +12,10 @@ waste_collection_schedule:
         - name: affaldonline_dk
           args:
               municipality: "favrskov"
-              values: "Nørregade|1||||8382|Hinnerup|6443|108156|0"
+              street: "Nørregade"
+              house_number: "1"
+              postal_code: "8382"
+              city: "Hinnerup"
 ```
 
 ### Configuration Variables
@@ -26,14 +29,67 @@ A duckduckgo search revealed many of them:
 
 - [DuckDuckGo](https://duckduckgo.com/?t=h_&q=site%3Aaffaldonline.dk%2Fkalender%2F&ia=web)
 
-**values**  
-_(String) (required)_
+**street**
 
-A string that includes the street name, house number, postal code, city name, and some numbers that seems to be internal affaldonline references. 
+_(String) (required if `values` is not set)_
+
+Street name.
+
+**house_number**
+
+_(String) (required if `values` is not set)_
+
+House number as shown in the Affaldonline dropdown. Compound labels may be entered
+with or without spaces, for example `14B`, `11 ST TV`, or `37Ai`.
+
+**postal_code**
+
+_(String) (optional, recommended)_
+
+Postal code. Use this when a street name exists in multiple cities or postal
+districts.
+
+**city**
+
+_(String) (optional, recommended)_
+
+City or postal district. This is used to disambiguate the street when it matches
+the Affaldonline lookup. If the postal code uniquely identifies the street but
+Affaldonline uses a different district label, the source still uses the postal
+code match.
+
+**values**  
+_(String) (optional, advanced)_
+
+A string that includes the street name, house number, postal code, city name, and some numbers that seems to be internal affaldonline references.
+If `values` is set, the address lookup is skipped.
+
+The source resolves `street`, `house_number`, `postal_code`, and `city` to this
+string automatically by calling Affaldonline's street and house-number lookup
+endpoints. The resolved string is cached in memory for the running Home
+Assistant process, so repeated fetches for the same address do not repeat the
+lookup. The cache is process-local and is rebuilt after Home Assistant restarts.
+
+Example with a compound house selector:
+
+```yaml
+waste_collection_schedule:
+    sources:
+        - name: affaldonline_dk
+          args:
+              municipality: "favrskov"
+              street: "Examplevej"
+              house_number: "11STTV"
+              postal_code: "1234"
+              city: "Eksempelby"
+```
 
 ## How to find the "values" string to use
 
-Go to the Affaldonline site for your municipality: 
+This is only needed for advanced troubleshooting or municipalities where the
+automatic address lookup does not find the right house selector.
+
+Go to the Affaldonline site for your municipality:
 
 - [Ærø](https://www.affaldonline.dk/kalender/aeroe/)
 - [Assens](https://www.affaldonline.dk/kalender/assens/)
