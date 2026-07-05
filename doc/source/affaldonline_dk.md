@@ -40,6 +40,7 @@ Go to the Affaldonline site for your municipality:
 - [Favrskov](https://www.affaldonline.dk/kalender/favrskov/)
 - [Fanø](https://www.affaldonline.dk/kalender/fanoe/)
 - [Fredericia](https://www.affaldonline.dk/kalender/fredericia/)
+- [Holbæk / Fors A/S](https://www.fors.dk/affald/afhentning-af-affald/)
 - [Langeland](https://www.affaldonline.dk/kalender/langeland/)
 - [Middelfart](https://www.affaldonline.dk/kalender/middelfart/)
 - [Nyborg](https://www.affaldonline.dk/kalender/nyborg/)
