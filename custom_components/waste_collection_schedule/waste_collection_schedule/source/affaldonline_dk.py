@@ -2,15 +2,21 @@ import logging
 import random
 import re
 from datetime import date, datetime
+from functools import lru_cache
 
 import requests
 from bs4 import BeautifulSoup
 from waste_collection_schedule import Collection  # type: ignore[attr-defined]
-from waste_collection_schedule.exceptions import SourceArgumentNotFoundWithSuggestions
+from waste_collection_schedule.exceptions import (
+    SourceArgAmbiguousWithSuggestions,
+    SourceArgumentNotFoundWithSuggestions,
+    SourceArgumentRequired,
+)
 
 TITLE = "Affaldonline"
 DESCRIPTION = "Affaldonline"
 URL = "https://affaldonline.dk"
+BASE_URL = "https://www.affaldonline.dk/kalender/{municipality}"
 API_URL = "https://www.affaldonline.dk/kalender/{municipality}/showInfo.php"
 
 _LOGGER = logging.getLogger("waste_collection_schedule.affaldonline_dk")
@@ -191,6 +197,45 @@ TEST_CASES = select_test_cases(
     AFFALDONLINE_MUNICIPALITIES, mode="first_from_each_parser"
 )
 
+PARAM_TRANSLATIONS = {
+    "en": {
+        "municipality": "Municipality",
+        "values": "Advanced values string",
+        "street": "Street",
+        "house_number": "House number",
+        "postal_code": "Postal code",
+        "city": "City",
+    },
+}
+
+PARAM_DESCRIPTIONS = {
+    "en": {
+        "municipality": "AffaldOnline municipality key, for example 'holbaek'.",
+        "values": (
+            "Optional advanced AffaldOnline values string. If set, street and house "
+            "number lookup is skipped."
+        ),
+        "street": "Street name. Required when values is not set.",
+        "house_number": (
+            "House number, including letter/floor/door if shown. Spaces are optional "
+            "for compound labels. Required when values is not set."
+        ),
+        "postal_code": "Postal code. Recommended when a street name exists in multiple cities.",
+        "city": (
+            "City or postal district. Recommended when a street name exists in multiple "
+            "cities; postal-code matches are still used if AffaldOnline has another "
+            "district label."
+        ),
+    },
+}
+
+HOW_TO_GET_ARGUMENTS_DESCRIPTION = {
+    "en": (
+        "Use street, house_number, and preferably postal_code/city. The source will "
+        "resolve the internal AffaldOnline values string automatically."
+    ),
+}
+
 DANISH_MONTHS = [
     "januar",
     "februar",
@@ -207,13 +252,130 @@ DANISH_MONTHS = [
 ]
 
 
+def _clean_optional(value: str | int | None) -> str | None:
+    if value is None:
+        return None
+
+    value = str(value).strip()
+    return value or None
+
+
+def _display_street_suggestion(street: dict) -> str:
+    return str(
+        street.get("value")
+        or f"{street.get('vejnavn', '')} ({street.get('postnr', '')} {street.get('Bynavn', '')})"
+    )
+
+
+def _normalize_house_number_label(value: str) -> str:
+    return re.sub(r"\s+", "", value).casefold()
+
+
+@lru_cache(maxsize=256)
+def _resolve_values(
+    municipality: str,
+    street: str,
+    house_number: str,
+    postal_code: str | None,
+    city: str | None,
+) -> str:
+    base_url = BASE_URL.format(municipality=municipality)
+    street_response = requests.get(f"{base_url}/acCal.php", params={"term": street})
+    street_response.raise_for_status()
+
+    street_candidates = street_response.json() or []
+    matching_streets = []
+    suggestions = []
+
+    for candidate in street_candidates:
+        if not isinstance(candidate, dict):
+            continue
+
+        suggestion = _display_street_suggestion(candidate)
+        suggestions.append(suggestion)
+
+        candidate_street = str(candidate.get("vejnavn", "")).casefold()
+
+        if candidate_street == street.casefold():
+            matching_streets.append(candidate)
+
+    if not matching_streets:
+        raise SourceArgumentNotFoundWithSuggestions("street", street, suggestions)
+
+    if postal_code is not None:
+        matching_streets = [
+            candidate
+            for candidate in matching_streets
+            if str(candidate.get("postnr", "")).strip() == postal_code
+        ]
+
+        if not matching_streets:
+            raise SourceArgumentNotFoundWithSuggestions("street", street, suggestions)
+
+    if city is not None:
+        city_matches = [
+            candidate
+            for candidate in matching_streets
+            if str(candidate.get("Bynavn", "")).casefold() == city.casefold()
+        ]
+
+        if city_matches:
+            matching_streets = city_matches
+
+    if len(matching_streets) > 1:
+        raise SourceArgAmbiguousWithSuggestions(
+            "street", street, [_display_street_suggestion(s) for s in matching_streets]
+        )
+
+    selected_street = matching_streets[0]
+    house_response = requests.get(
+        f"{base_url}/husnrCal.php",
+        params={
+            "vejnavn": selected_street["vejnavn"],
+            "postnr": selected_street["postnr"],
+            "postdist": selected_street["Bynavn"],
+        },
+    )
+    house_response.raise_for_status()
+
+    soup = BeautifulSoup(house_response.text, "html.parser")
+    house_options = soup.find_all("option")
+    house_suggestions = [option.get_text(strip=True) for option in house_options]
+    normalized_house_number = _normalize_house_number_label(house_number)
+
+    for option in house_options:
+        option_text = option.get_text(strip=True)
+        if (
+            option_text.casefold() == house_number.casefold()
+            or _normalize_house_number_label(option_text) == normalized_house_number
+        ):
+            return option["value"]
+
+    raise SourceArgumentNotFoundWithSuggestions(
+        "house_number", house_number, house_suggestions
+    )
+
+
 class Source:
-    def __init__(self, municipality: str, values: str):
+    def __init__(
+        self,
+        municipality: str,
+        values: str | None = None,
+        street: str | None = None,
+        house_number: str | int | None = None,
+        postal_code: str | int | None = None,
+        city: str | None = None,
+    ):
         _LOGGER.debug(
-            "Initializing Source with municipality=%s, values=%s", municipality, values
+            "Initializing Source with municipality=%s, values=%s, street=%s, house_number=%s, postal_code=%s, city=%s",
+            municipality,
+            values,
+            street,
+            house_number,
+            postal_code,
+            city,
         )
         self._api_url = API_URL.format(municipality=municipality)
-        self._values = values
         self._parser_type = AFFALDONLINE_MUNICIPALITIES.get(municipality, {}).get(
             "parser"
         )
@@ -228,6 +390,27 @@ class Source:
         if not callable(parser):
             raise ValueError(f"Parser method for {self._parser_type} is not callable")
 
+        values = _clean_optional(values)
+        street = _clean_optional(street)
+        house_number = _clean_optional(house_number)
+        postal_code = _clean_optional(postal_code)
+        city = _clean_optional(city)
+
+        if values is None:
+            if street is None:
+                raise SourceArgumentRequired(
+                    "street", "provide either values or street + house_number"
+                )
+            if house_number is None:
+                raise SourceArgumentRequired(
+                    "house_number", "provide either values or street + house_number"
+                )
+
+            values = _resolve_values(
+                municipality, street, house_number, postal_code, city
+            )
+
+        self._values = values
         self._parser_method = parser
 
     def fetch(self) -> list[Collection]:
