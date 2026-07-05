@@ -76,6 +76,12 @@ AFFALDONLINE_MUNICIPALITIES = {
         "parser": "pdf",
         "values": "Nørre Allé|5||||7000|Fredericia|11079971|1907927|0",
     },
+    "holbaek": {
+        "title": "Fors A/S (Holbæk Kommune)",
+        "url": "https://www.fors.dk/affald/afhentning-af-affald/",
+        "parser": "default",
+        "values": "Tåstrup Møllevej|5||||4300|Holbæk|76490500|1676484|0",
+    },
     "langeland": {
         "title": "Langeland Forsyning",
         "url": "https://www.langeland-forsyning.dk/",
