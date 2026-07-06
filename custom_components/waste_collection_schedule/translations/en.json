@@ -1777,7 +1777,8 @@
           "address": "Address"
         },
         "data_description": {
-          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used."
+          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used.",
+          "address": "Full service address (e.g. '1 Rosella Chase, Goonellabah NSW 2480')"
         }
       },
       "reconfigure_lismore_city_nsw_gov_au": {
@@ -1787,7 +1788,9 @@
           "calendar_title": "Calendar Title",
           "address": "Address"
         },
-        "data_description": {}
+        "data_description": {
+          "address": "Full service address (e.g. '1 Rosella Chase, Goonellabah NSW 2480')"
+        }
       },
       "args_liverpool_nsw_gov_au": {
         "title": "Configure Source",
@@ -6851,6 +6854,29 @@
           "password": "Password"
         },
         "data_description": {}
+      },
+      "args_terrestouloises_com": {
+        "title": "Configure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "commune": "Commune"
+        },
+        "data_description": {
+          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used.",
+          "commune": "Your commune within the Terres Touloises area: Aingeray, Andilly, Ansauville, Avrainville, Bicqueley, Bois-de-Haye, Boucq, Bouvron, Bruley, Charmes-la-Côte, Chaudeney-sur-Moselle, Choloy-Ménillot, Domèvre-en-Haye, Domgermain, Dommartin-lès-Toul, Écrouves, Fontenoy-sur-Moselle, Foug, Francheville, Gondreville, Grosrouvres, Gye, Jaillon, Lagney, Laneuveville-derrière-Foug, Lay-Saint-Rémy, Lucey, Manoncourt-en-Woëvre, Manonville, Ménil-la-Tour, Minorville, Noviant-aux-Prés, Pagney-derrière-Barine, Pierre-la-Treiche, Royaumeix, Sanzey, Tremblecourt, Trondes, Villey-le-Sec, Villey-Saint-Étienne"
+        }
+      },
+      "reconfigure_terrestouloises_com": {
+        "title": "Reconfigure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "commune": "Commune"
+        },
+        "data_description": {
+          "commune": "Your commune within the Terres Touloises area: Aingeray, Andilly, Ansauville, Avrainville, Bicqueley, Bois-de-Haye, Boucq, Bouvron, Bruley, Charmes-la-Côte, Chaudeney-sur-Moselle, Choloy-Ménillot, Domèvre-en-Haye, Domgermain, Dommartin-lès-Toul, Écrouves, Fontenoy-sur-Moselle, Foug, Francheville, Gondreville, Grosrouvres, Gye, Jaillon, Lagney, Laneuveville-derrière-Foug, Lay-Saint-Rémy, Lucey, Manoncourt-en-Woëvre, Manonville, Ménil-la-Tour, Minorville, Noviant-aux-Prés, Pagney-derrière-Barine, Pierre-la-Treiche, Royaumeix, Sanzey, Tremblecourt, Trondes, Villey-le-Sec, Villey-Saint-Étienne"
+        }
       },
       "args_opendata_bordeauxmetropole_fr": {
         "title": "Configure Source",
@@ -18954,6 +18980,37 @@
         },
         "data_description": {}
       },
+      "args_aen_minasidor_se": {
+        "title": "Configure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "address": "Address",
+          "email": "Email address",
+          "password": "Password"
+        },
+        "data_description": {
+          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used.",
+          "address": "Address to use when the account has more than one property.",
+          "email": "Email address used to log in to AEN Mina Sidor.",
+          "password": "Password used to log in to AEN Mina Sidor."
+        }
+      },
+      "reconfigure_aen_minasidor_se": {
+        "title": "Reconfigure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "address": "Address",
+          "email": "Email address",
+          "password": "Password"
+        },
+        "data_description": {
+          "address": "Address to use when the account has more than one property.",
+          "email": "Email address used to log in to AEN Mina Sidor.",
+          "password": "Password used to log in to AEN Mina Sidor."
+        }
+      },
       "args_skaraborg_se": {
         "title": "Configure Source",
         "description": "Configure your service provider. {howto}More details: {docs_url}.",
@@ -28628,6 +28685,29 @@
         },
         "data_description": {
           "address": "Street address (e.g. '16795 Northville Rd')"
+        }
+      },
+      "args_ocarcims_ocfl_net": {
+        "title": "Configure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "parcel_id": "Parcel ID"
+        },
+        "data_description": {
+          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used.",
+          "parcel_id": "15-digit parcel ID from the Orange County Property Appraiser (ocpafl.org)"
+        }
+      },
+      "reconfigure_ocarcims_ocfl_net": {
+        "title": "Reconfigure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "parcel_id": "Parcel ID"
+        },
+        "data_description": {
+          "parcel_id": "15-digit parcel ID from the Orange County Property Appraiser (ocpafl.org)"
         }
       },
       "args_palmcoast_fl_gov": {

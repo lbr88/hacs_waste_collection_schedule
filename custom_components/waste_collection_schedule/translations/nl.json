@@ -6473,6 +6473,26 @@
         },
         "data_description": {}
       },
+      "args_terrestouloises_com": {
+        "title": "Configure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "commune": "Commune"
+        },
+        "data_description": {
+          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used."
+        }
+      },
+      "reconfigure_terrestouloises_com": {
+        "title": "Reconfigure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "commune": "Commune"
+        },
+        "data_description": {}
+      },
       "args_opendata_bordeauxmetropole_fr": {
         "title": "Configure Source",
         "description": "Configure your service provider. {howto}More details: {docs_url}.",
@@ -18132,6 +18152,30 @@
         },
         "data_description": {}
       },
+      "args_aen_minasidor_se": {
+        "title": "Configure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "address": "Address",
+          "email": "Email",
+          "password": "Password"
+        },
+        "data_description": {
+          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used."
+        }
+      },
+      "reconfigure_aen_minasidor_se": {
+        "title": "Reconfigure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "address": "Address",
+          "email": "Email",
+          "password": "Password"
+        },
+        "data_description": {}
+      },
       "args_skaraborg_se": {
         "title": "Configure Source",
         "description": "Configure your service provider. {howto}More details: {docs_url}.",
@@ -27348,6 +27392,26 @@
         "data": {
           "calendar_title": "Calendar Title",
           "address": "Address"
+        },
+        "data_description": {}
+      },
+      "args_ocarcims_ocfl_net": {
+        "title": "Configure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "parcel_id": "Parcel Id"
+        },
+        "data_description": {
+          "calendar_title": "A more readable, or user-friendly, name for the waste calendar. If nothing is provided, the name returned by the source will be used."
+        }
+      },
+      "reconfigure_ocarcims_ocfl_net": {
+        "title": "Reconfigure Source",
+        "description": "Configure your service provider. {howto}More details: {docs_url}.",
+        "data": {
+          "calendar_title": "Calendar Title",
+          "parcel_id": "Parcel Id"
         },
         "data_description": {}
       },
