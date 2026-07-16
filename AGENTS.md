@@ -6,6 +6,26 @@ For the full human-facing guide, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 > **Claude Code users:** Claude Code also reads [`CLAUDE.md`](CLAUDE.md) (a role-aware project guide) and exposes specialised slash commands. Use `/new-source` to be walked through investigating a provider, generating the source module, and submitting a PR. See [`.claude/agents/`](.claude/agents/) for the full list of available agents.
 
+## Fork maintenance for custom HACS installs
+
+This fork may be installed directly in Home Assistant through HACS as a custom
+repository. Before creating or installing a custom HACS release from this fork:
+
+1. Run `git fetch --all --tags --prune`.
+2. Rebase the feature branch stack onto the current `upstream/master`.
+3. Verify the release commit contains current upstream with
+   `git merge-base --is-ancestor upstream/master HEAD`.
+4. Push the rebased branches and create the custom release/tag from the rebased
+   address-resolution branch, not from an older branch or a manually copied file.
+5. Install that release through HACS and verify HACS shows this fork as the only
+   installed owner for `waste_collection_schedule`; `mampfes/hacs_waste_collection_schedule`
+   must not also be marked installed.
+
+Do not manually copy files into `/config/custom_components/waste_collection_schedule`
+as the final install method. A manual copy is only acceptable as a temporary
+hotfix and must be replaced by a HACS-managed install before the task is
+considered complete.
+
 ## Project layout
 
 Two nested packages:
