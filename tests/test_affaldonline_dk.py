@@ -15,7 +15,7 @@ sys.path.insert(
     ),
 )
 
-from waste_collection_schedule.source import affaldonline_dk  # noqa: E402
+from waste_collection_schedule.source import affaldonline_dk
 
 
 class MockResponse:
